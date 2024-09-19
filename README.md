@@ -23,19 +23,11 @@ The `metadata` file contains metadata for the pad and looks something like:
 ```yaml
 - name: "Alice One-time pad"
 - description: "One-time pad for corresponding with Bob"
-- type: "exchange"
 - created: "2024-09-15"
 ```
 
 The `blocks` folder contains a set of files containing
 [cryptographically secure random numbers](https://cryptography.io/en/latest/random-numbers/#random-number-generation).
-
-### Pad types
-
-There are two pad types: `exchange` and `vault`.
-
-`exchange` pads are intended for exchanging messages or data with a recipient.
-`vault` pads are intended for securing data for future retrieval.
 
 ### Blocks
 
@@ -51,12 +43,12 @@ A Pen Pal Message consists of:
 - a `blocks` file
 - a `message` file
 
-A message is packaged as a [tar](https://www.man7.org/linux/man-pages/man1/tar.1.html) archive that contains the above files (without any directory structure).
-
 The `blocks` file contains a list of uuid strings separated by newlines.
 The uuids represent the blocks needed to decrypt the message.
 
 The `message` file is a binary file representing the encrypted content.
+
+A message is packaged as a [tar](https://www.man7.org/linux/man-pages/man1/tar.1.html) archive that contains the above files (without any directory structure).
 
 ### Message length
 

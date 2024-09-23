@@ -9,6 +9,10 @@ from os import urandom
 
 
 def get_random_bytes(length: int) -> bytes:
-    """TODO: explain why os.urandom instead of random is used here
+    """os.urandom retrieves random bytes produced by the operating system
+    (for example, /dev/urandom) that are sufficient for cryptographic applications.
+
+    This function avoids calling random.randbytes which is intended for simulations
+    and is *not* suitable for security applications.
     """
     return urandom(length)

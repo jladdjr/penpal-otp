@@ -1,6 +1,11 @@
 venv:
-        python3 -m venv .venv
-        .venv/bin/pip3 install -r requirements-dev.txt
+        #!/usr/bin/env bash
+        set -x
+        venv_parent_folder="$HOME/venvs"
+        mkdir -p $venv_parent_folder
+        rm -r ${venv_parent_folder}/penpal
+        python3 -m venv ${venv_parent_folder}/penpal
+        ${venv_parent_folder}/penpal/bin/pip3 install -r requirements-dev.txt
 
 test:
         pytest --cov=penpal .

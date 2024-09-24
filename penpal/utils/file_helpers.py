@@ -2,6 +2,7 @@ from pathlib import Path
 from stat import (S_IRUSR, S_IWUSR, S_IXUSR,
                   S_IRGRP, S_IWGRP, S_IXGRP,
                   S_IROTH, S_IWOTH, S_IXOTH)
+from tempfile import TemporaryDirectory
 
 from penpal.exceptions import PermissionException
 
@@ -63,3 +64,28 @@ def assert_secure_dir(path: Path):
        get_group_permissions(path) != (False, False, False) or \
        get_world_permissions(path) != (False, False, False):
         raise PermissionException(f"{path} must have permissions set to 700")
+
+
+def get_or_create_pad_directory():
+    """Gets directory used to store one-time pads
+    and create temporary directories for encrypting and decrypting files.
+
+    By default, this is `$HOME/.pad`
+    """
+    # TODO: make pad directory configurable
+    pad_dir = Path("~/.pad").expanduser()
+
+    if not pad_dir.exists():
+        pad_dir.mkdir(0o700)
+    return pad_dir
+
+
+def tmp_directory():
+    """Gets temporary directory suitable for encrypting
+    or decrypting files.
+
+    This will be created under the pad directory.
+    """
+    pad_dir = get_or_create_pad_directory()
+
+    return TemporaryDirectory(dir=pad_dir)

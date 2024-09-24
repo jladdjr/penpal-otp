@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from penpal.archive import Archiver
-from penpal.utils.file_helpers import assert_secure_dir
+from penpal.utils.file_helpers import assert_secure_dir, tmp_directory
 
 
 class Encrypter:
@@ -39,6 +39,8 @@ class Encrypter:
 
         Archiver.preflight_check()
 
+        # TODO: if pad directory is empty, raise an exception
+
     @staticmethod
     def encrypt(pad_path: Path, file_path: Path, encrypted_file_path: Path):
         """Encrypts a file using a one-time pad located at `pad`.
@@ -53,16 +55,12 @@ class Encrypter:
         """
         Encrypter.preflight_check(pad_path, file_path, encrypted_file_path)
 
-        # TODO: if pad directory is empty, raise an exception
+        tmp_dir = tmp_directory()
+        archived_file_path = Path(tmp_dir.name).joinpath("content.tgz")
 
-        # TODO: create clean-up hooks that can be called if encryption finishes
-        #       successfully, or if it is interrupted
+        Archiver.create_archive(source_file=file_path,
+                                dest_file=archived_file_path)
 
-        # pseudocode
-        # create temporary working directory
-        #   and assign 0o700-level permissions to dir
-        #   and make sure that folder is under user's directory
-        #
         # use tar to create a compressed archive of the original file
         #   .. so that the file's metadata can be preserved
         #

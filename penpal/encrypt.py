@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from penpal.archive import Archiver
 from penpal.utils.file_helpers import assert_secure_dir
 
 
@@ -21,7 +22,7 @@ class Encrypter:
     """
 
     @staticmethod
-    def _preflight_check(pad_path: Path, file_path: Path, encrypted_file_path: Path):
+    def preflight_check(pad_path: Path, file_path: Path, encrypted_file_path: Path):
         """Ensures preconditions for encrypting are met.
 
         Arguments:
@@ -36,6 +37,8 @@ class Encrypter:
 
         assert_secure_dir(pad_path)
 
+        Archiver.preflight_check()
+
     @staticmethod
     def encrypt(pad_path: Path, file_path: Path, encrypted_file_path: Path):
         """Encrypts a file using a one-time pad located at `pad`.
@@ -48,7 +51,7 @@ class Encrypter:
         file_path -- file to encrypted
         encrypted_file_path -- location to store encrypted file
         """
-        Encrypter._preflight_check(pad_path, file_path, encrypted_file_path)
+        Encrypter.preflight_check(pad_path, file_path, encrypted_file_path)
 
         # TODO: if pad directory is empty, raise an exception
 

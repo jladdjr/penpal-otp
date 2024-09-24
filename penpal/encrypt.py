@@ -48,7 +48,7 @@ class Encrypter:
         file_path -- file to encrypted
         encrypted_file_path -- location to store encrypted file
         """
-        self._preflight_check(pad_path, file_path, encrypted_file_path)
+        Encrypter._preflight_check(pad_path, file_path, encrypted_file_path)
 
         # TODO: if pad directory is empty, raise an exception
 

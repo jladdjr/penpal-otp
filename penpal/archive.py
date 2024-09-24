@@ -1,0 +1,2 @@
+class Archiver:
+    pass

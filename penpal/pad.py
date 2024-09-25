@@ -4,6 +4,7 @@ from math import ceil
 from pathlib import Path
 from secrets import choice
 
+from penpal.exceptions import EmptyOneTimePadException
 from penpal.hazmat.hazmat import get_random_bytes
 from penpal.settings import MAX_BLOCK_SIZE, STD_BLOCK_SIZE
 from penpal.utils.file_helpers import assert_secure_dir
@@ -81,7 +82,11 @@ def fetch_and_destroy_random_block(pad_path: Path) -> (str, bytes):
     Arguments:
     `pad_path` -- path to the one-time pad
     """
-    block_name = choice(os.listdir(pad_path))
+    block_list = os.listdir(pad_path)
+    if len(block_list) == 0:
+        raise EmptyOneTimePadException()
+
+    block_name = choice(block_list)
     block_path = pad_path.joinpath(block_name)
 
     block_bytes = None

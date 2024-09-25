@@ -1,7 +1,11 @@
 from pathlib import Path
 
 from penpal.archive import Archiver
-from penpal.utils.file_helpers import assert_secure_dir, tmp_directory
+from penpal.hazmat import encrypt
+from penpal.utils.file_helpers import (assert_secure_dir,
+                                       fetch_and_destroy_random_block,
+                                       tmp_directory)
+
 
 
 class Encrypter:
@@ -64,36 +68,26 @@ class Encrypter:
         Archiver.create_archive(source_file=file_path,
                                 dest_file=archived_file_path)
 
-        # create variable to hold encrypted bytes
-        # create list to hold filenames of all blocks used
-        #   and a count of the number of bytes used for
-        #   encryption in the final block
-        #
-        # open tar archive to encrypt (w/ 'rb' mode)
-        # create variable to use to note when encryption has completed
-        #
-        # while True
-        #  TODO: consider making the contents of this loop a helper function
-        #
-        #  fetch a block from otp
-        #    if there are no more blocks left, raise an exception
-        #    read the block into memory
-        #    then delete the file from the otp
-        #
-        #  get length of block
-        #  determine how many bytes to encrypt on this pass
-        #    should be the length of the block
-        #    or the length of the remainder of the file
-        #    whichever is smaller
-        #    if this is the final pass note so
-        #      and save number of bytes encrypted using final block
-        #      in the array
-        #
-        #  encrypt that many bytes of the file
-        #  .. and save the result in the array of bytes for the encrypted file
-        #
-        #  if this is the final pass, break from the loop
-        #
+        enc_file_bytes = []
+        block_names = []
+        final_bytes_used = None
+
+        with open(archived_file_path, 'rb') as archived_file:
+            finished = False
+            while not finished:
+                # TODO: Catch EmptyOneTimePadException
+                name, key = fetch_and_destroy_random_block(pad_path)
+                block_names.append(name)
+
+                cleartext = archived_file.read(key_len)
+
+                if len(cleartext) < len(key):
+                    # this is the last block to encode
+                    finished = True
+                    final_bytes_used = len(cleartext)
+
+                enc_file_bytes.append(encrypt(cleartext, key)
+
         # (outside of encryption loop)
         # call clean-up hooks
         # create temporary directory to hold encrypted message and manifest

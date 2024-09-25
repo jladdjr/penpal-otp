@@ -16,3 +16,8 @@ def get_random_bytes(length: int) -> bytes:
     and is *not* suitable for security applications.
     """
     return urandom(length)
+
+
+def encrypt(cleartext: bytes, key: bytes):
+    assert len(cleartext) == len(key)
+    return bytes(xor(i,j) for (i,j) in zip(cleartext, key))

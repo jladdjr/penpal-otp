@@ -17,5 +17,7 @@ class Archiver:
 
     @staticmethod
     def create_archive(source_file: Path, dest_file: Path):
-        run(["tar", "czf", dest_file.as_posix(), "-C", source_file.parent.as_posix(), source_file.name])
+        run(["tar", "czf", dest_file.as_posix(),
+             "-C", source_file.parent.as_posix(),
+             source_file.name])
         chmod(dest_file, 0o700)

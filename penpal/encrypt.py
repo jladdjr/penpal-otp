@@ -55,15 +55,15 @@ class Encrypter:
         """
         Encrypter.preflight_check(pad_path, file_path, encrypted_file_path)
 
+        # TODO: create hook to clean up tmp directory
+        #       call hook if there are any exceptions
+        #       (wrap whole operation below in try / except Exception)
         tmp_dir = tmp_directory()
         archived_file_path = Path(tmp_dir.name).joinpath("content.tgz")
 
         Archiver.create_archive(source_file=file_path,
                                 dest_file=archived_file_path)
 
-        # use tar to create a compressed archive of the original file
-        #   .. so that the file's metadata can be preserved
-        #
         # create variable to hold encrypted bytes
         # create list to hold filenames of all blocks used
         #   and a count of the number of bytes used for

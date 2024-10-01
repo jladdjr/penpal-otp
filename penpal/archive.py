@@ -16,8 +16,11 @@ class Archiver:
             raise MissingDependency("Unable to locate tar utility")
 
     @staticmethod
-    def create_archive(source_file: Path, dest_file: Path):
+    def create_archive(source_files: list[Path], dest_file: Path):
+        # TODO: assumes all files are in the same directory
+        source_file_names = [source_file.name
+                             for source_file in source_files]
         run(["tar", "czf", dest_file.as_posix(),
-             "-C", source_file.parent.as_posix(),
-             source_file.name])
+             "-C", source_files[0].parent.as_posix(),
+             *source_file_names])
         chmod(dest_file, 0o700)

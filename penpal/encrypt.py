@@ -1,9 +1,12 @@
+import os
 from pathlib import Path
 
+import yaml
+
 from penpal.archive import Archiver
-from penpal.hazmat import encrypt
+from penpal.hazmat.hazmat import xor_encrypt
+from penpal.pad import fetch_and_destroy_random_block
 from penpal.utils.file_helpers import (assert_secure_dir,
-                                       fetch_and_destroy_random_block,
                                        tmp_directory)
 
 
@@ -65,10 +68,10 @@ class Encrypter:
         tmp_dir = tmp_directory()
         archived_file_path = Path(tmp_dir.name).joinpath("content.tgz")
 
-        Archiver.create_archive(source_file=file_path,
+        Archiver.create_archive(source_files=[file_path],
                                 dest_file=archived_file_path)
 
-        enc_file_bytes = []
+        enc_file_bytes = bytearray()
         block_names = []
         final_bytes_used = None
 
@@ -79,22 +82,30 @@ class Encrypter:
                 name, key = fetch_and_destroy_random_block(pad_path)
                 block_names.append(name)
 
-                cleartext = archived_file.read(key_len)
+                cleartext = archived_file.read(len(key))
 
                 if len(cleartext) < len(key):
                     # this is the last block to encode
                     finished = True
                     final_bytes_used = len(cleartext)
+                    key = key[:len(cleartext)]
 
-                enc_file_bytes.append(encrypt(cleartext, key)
+                enc_file_bytes.extend(xor_encrypt(cleartext, key))
 
-        # (outside of encryption loop)
-        # call clean-up hooks
-        # create temporary directory to hold encrypted message and manifest
-        #  .. call directory message.enc
-        # write manifest to directory
-        # write encrypted binary file to directory
-        #
+        # TODO: call clean-up hooks
+
+        # write manifest file
+        manifest_path = Path(tmp_dir.name).joinpath("manifest")
+        with open(manifest_path, "w") as manifest:
+            yaml.dump(block_names, manifest, default_flow_style=False)
+
+        ciphertext_path = Path(tmp_dir.name).joinpath("cipher.bin")
+        with open(ciphertext_path, "wb") as cipher_file:
+            cipher_file.write(enc_file_bytes)
+
         # Use tar to create a compressed archive from message.enc
-        # Delete message.enc
-        # Give the encrypted message the name requested by the user
+        Archiver.create_archive(source_files=[manifest_path, ciphertext_path],
+                                dest_file=encrypted_file_path)
+
+        # Delete temporary directory
+        tmp_dir.cleanup()

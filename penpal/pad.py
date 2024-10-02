@@ -2,7 +2,9 @@ import os
 from hashlib import sha3_256
 from math import ceil
 from pathlib import Path
+from secrets import choice
 
+from penpal.exceptions import EmptyOneTimePadException
 from penpal.hazmat.hazmat import get_random_bytes
 from penpal.settings import MAX_BLOCK_SIZE, STD_BLOCK_SIZE
 from penpal.utils.file_helpers import assert_secure_dir
@@ -69,3 +71,27 @@ def create_block_file(path: Path, size: int):
     os.chmod(block_file, 0o400)
 
     return sha
+
+
+def fetch_and_destroy_random_block(pad_path: Path) -> (str, bytes):
+    """Randomly selects a block from pad located at `pad_path`,
+    collects the bytes from the block, notes the block's filename,
+    and destroys the block file. Returns the name of the block file and
+    the bytes from the block file.
+
+    Arguments:
+    `pad_path` -- path to the one-time pad
+    """
+    block_list = os.listdir(pad_path)
+    if len(block_list) == 0:
+        raise EmptyOneTimePadException()
+
+    block_name = choice(block_list)
+    block_path = pad_path.joinpath(block_name)
+
+    block_bytes = None
+    with open(block_path, "rb") as block:
+        block_bytes = block.read()
+
+    os.remove(block_path)
+    return (block_name, block_bytes)

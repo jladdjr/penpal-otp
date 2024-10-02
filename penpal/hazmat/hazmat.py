@@ -5,6 +5,7 @@
 # CONTAINS FUNCTIONS THAT ARE CRYPTOGRAPHICALLY SENSITIVE. #
 ############################################################
 
+from operator import xor
 from os import urandom
 
 
@@ -16,3 +17,11 @@ def get_random_bytes(length: int) -> bytes:
     and is *not* suitable for security applications.
     """
     return urandom(length)
+
+
+def xor_encrypt(cleartext: bytes, key: bytes):
+    assert len(cleartext) == len(key)
+    return bytes(xor(i,j) for (i,j) in zip(cleartext, key))
+
+
+xor_decrypt = xor_encrypt

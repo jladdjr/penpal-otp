@@ -24,3 +24,7 @@ class Archiver:
              "-C", source_files[0].parent.as_posix(),
              *source_file_names])
         chmod(dest_file, 0o700)
+
+    @staticmethod
+    def extract_archive(source_file: Path):
+        run(["tar", "xzf", source_file.as_posix()])

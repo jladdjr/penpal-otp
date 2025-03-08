@@ -10,6 +10,13 @@
 Pen Pal lets you send and receive messages encrypted using a
 [One-time Pad](https://en.wikipedia.org/wiki/One-time_pad).
 
+## Installation
+
+### Requirements
+
+TODO: tar should be installed
+TODO: register python package so that it can be pip-installed
+
 ## Core concepts and caveats
 
 > [!CAUTION]

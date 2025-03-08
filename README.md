@@ -1,6 +1,6 @@
 # Pen Pal
 
-[![Unit Tests](https://github.com/jladdjr/penpal-otp/actions/workflows/python-app.yaml/badge.svg)](https://github.com/jladdjr/penpal-otp/actions/workflows/python-app.yaml)
+[![Unit Tests](https://github.com/jladdjr/noirnet/actions/workflows/python-app.yaml/badge.svg)](https://github.com/jladdjr/noirnet/actions/workflows/python-app.yaml)
 
 <img src="./images/writing-a-letter.webp" alt="Writing a letter" width="300"/>
 

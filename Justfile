@@ -3,16 +3,22 @@ venv:
         set -x
         venv_parent_folder="$HOME/venvs"
         mkdir -p $venv_parent_folder
-        rm -r ${venv_parent_folder}/penpal
-        python3 -m venv ${venv_parent_folder}/penpal
-        ${venv_parent_folder}/penpal/bin/pip3 install -r requirements-dev.txt
-        ${venv_parent_folder}/penpal/bin/pip3 install -e .
+        rm -r ${venv_parent_folder}/noirnet
+        python3 -m venv ${venv_parent_folder}/noirnet
+        ${venv_parent_folder}/noirnet/bin/pip3 install -r requirements-dev.txt
+        ${venv_parent_folder}/noirnet/bin/pip3 install -e .
+
+test_with_pdb:
+        #!/usr/bin/env bash
+        venv_parent_folder="$HOME/venvs"
+        ${venv_parent_folder}/noirnet/bin/pytest --pdb --cov=noirnet --cov-fail-under=70
 
 test:
         #!/usr/bin/env bash
         venv_parent_folder="$HOME/venvs"
-        ${venv_parent_folder}/penpal/bin/pytest --cov=penpal --cov-fail-under=70
+        ${venv_parent_folder}/noirnet/bin/pytest --cov=noirnet --cov-fail-under=50
 
 lint:
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        #!/usr/bin/env bash
+        venv_parent_folder="$HOME/venvs"
+        ${venv_parent_folder}/noirnet/bin/black .

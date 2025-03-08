@@ -11,7 +11,7 @@ venv:
 test:
         #!/usr/bin/env bash
         venv_parent_folder="$HOME/venvs"
-        ${venv_parent_folder}/penpal/bin/pytest --cov=penpal .
+        ${venv_parent_folder}/penpal/bin/pytest --cov=penpal --cov-fail-under=70 .
 
 lint:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics

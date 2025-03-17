@@ -1,9 +1,9 @@
 from unittest import mock
 
-from penpal.hazmat import hazmat
+from noirnet.hazmat import hazmat
 
 
-@mock.patch("penpal.hazmat.hazmat.urandom")
+@mock.patch("noirnet.hazmat.hazmat.urandom")
 def test_get_random_bytes(urandom):
     byte_array = [1, 2, 3, 4, 5]
     urandom.return_value = bytes(byte_array)

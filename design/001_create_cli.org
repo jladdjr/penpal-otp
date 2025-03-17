@@ -1,0 +1,35 @@
+Problem statement:
+
+Without a CLI, the user can only use diana-pad as Python library.
+
+* Solution
+
+Add support for a basic CLI that includes support for:
+- help
+- generating a pad
+- encrypting a message
+- decrypting a message
+
+* Details
+
+$ dp help
+
+Should print help text, including:
+
+#+begin_quote
+<overview of what dp does>
+<list of supported commands>
+  <syntax>
+  <description of command>
+#+end_quote
+
+$ dp pad [--path <path>] [--size <bytes>] [--description <desc>]
+
+Defaults:
+- path => $CWD/main.pad
+- size => 1 MB
+- description => (blank)
+
+$ dp encrypt
+
+* No-go

@@ -18,3 +18,9 @@ TODO: register python package so that it can be pip-installed
 ## Usage
 
 TODO
+
+## Further reading
+
+For a deeper explanation of one-time pads and their usage, see the overview of [core concepts](docs/concepts.md).
+
+For technical specifications describing how one-time pads are managed by this tool, see the [specification](docs/specification.md).

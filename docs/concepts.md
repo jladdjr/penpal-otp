@@ -47,3 +47,9 @@ the two users are able to exchange encrypted messages.
 
 When a Pad is used to encrypt or decrypt a message, the associated Pad data is _immediately_ destroyed
 as a precaution against being [reused](https://en.wikipedia.org/wiki/Venona_project#Decryption).
+
+## Further reading
+
+For a deeper explanation of one-time pads and their usage, see the overview of [core concepts](docs/concepts.md).
+
+For technical specifications describing how one-time pads are managed by this tool, see the [specification](docs/specification.md).
